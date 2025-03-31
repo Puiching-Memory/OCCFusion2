@@ -3,14 +3,17 @@
 **a. Create a conda virtual environment and activate it.**
 
 ```shell
-conda create -n occfusion python=3.12
+conda create -n occfusion python=3.10
 conda activate occfusion
+apt update && apt upgrade -y
+apt install libgl1-mesa-glx libglib2.0-0 -y
 ```
 
-**b. Install PyTorch and torchvision following the [official instructions](https://pytorch.org/).**
+a**b. Install PyTorch and torchvision following the [official instructions](https://pytorch.org/).**
 
 ```shell
 pip install torch==2.5.1 torchvision==0.20.1 torchaudio==2.5.1 --index-url https://download.pytorch.org/whl/cu121
+pip install numpy==1.26.4
 ```
 
 **c. Install mmengine, mmcv, mmdet, mmdet3d, and mmseg.**
@@ -22,15 +25,34 @@ git clone --branch v3.3.0 https://github.com/open-mmlab/mmdetection.git
 git clone --branch v0.10.7 https://github.com/open-mmlab/mmengine.git
 git clone --branch v1.2.2 https://github.com/open-mmlab/mmsegmentation.git
 
+pip install -U pip setuptools
+
 cd mmcv
 pip install -r requirements/optional.txt
 pip install -e . -v
+cd ..
+
+cd mmengine
+pip install -e . -v
+cd ..
+
+cd mmdetection
+pip install -e . -v
+cd ..
+
+cd mmdetection3d
+pip install -e . -v
+cd ..
+
+cd mmsegmentation
+pip install -e . -v
+cd ..
 ```
 
 **d. Install others.**
 
 ```shell
-pip install focal_loss_torch
+pip install focal_loss_torch pykitti timm
 ```
 
 **e. Download code and backbone pretrain weight.**
