@@ -3,7 +3,7 @@
 **a. Create a conda virtual environment and activate it.**
 
 ```shell
-conda create -n occfusion python=3.10
+conda create -n occfusion python=3.12
 conda activate occfusion
 apt update && apt upgrade -y
 apt install libgl1-mesa-glx libglib2.0-0 -y
@@ -19,13 +19,12 @@ pip install numpy==1.26.4
 **c. Install mmengine, mmcv, mmdet, mmdet3d, and mmseg.**
 
 ```shell
-git clone --branch v1.4.0 https://github.com/open-mmlab/mmdetection3d.git
-git clone --branch v2.1.0 https://github.com/open-mmlab/mmcv.git
-git clone --branch v3.3.0 https://github.com/open-mmlab/mmdetection.git
-git clone --branch v0.10.7 https://github.com/open-mmlab/mmengine.git
-git clone --branch v1.2.2 https://github.com/open-mmlab/mmsegmentation.git
-
 pip install -U pip setuptools
+
+cd nuscenes-devkit
+pip install -r setup/requirements.txt
+pip install -e setup/ -v
+cd ..
 
 cd mmcv
 pip install -r requirements/optional.txt
@@ -40,19 +39,21 @@ cd mmdetection
 pip install -e . -v
 cd ..
 
+cd mmsegmentation
+pip install -e . -v
+cd ..
+
 cd mmdetection3d
 pip install -e . -v
 cd ..
 
-cd mmsegmentation
-pip install -e . -v
-cd ..
+
 ```
 
 **d. Install others.**
 
 ```shell
-pip install focal_loss_torch pykitti timm
+pip install -r requirements.txt
 ```
 
 **e. Download code and backbone pretrain weight.**

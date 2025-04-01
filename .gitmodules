@@ -13,3 +13,6 @@
 [submodule "mmcv"]
 	path = mmcv
 	url = https://github.com/open-mmlab/mmcv.git
+[submodule "nuscenes-devkit"]
+	path = nuscenes-devkit
+	url = https://github.com/dominikandreas/nuscenes-devkit.git
