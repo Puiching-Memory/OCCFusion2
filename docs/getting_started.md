@@ -1,20 +1,27 @@
-# Training and Testing
-
-## NuScenes 3D Semantic Occupancy Prediction Task
-
-**a. Train OCCFusion with 8 GPUs.**
+# Train
 
 ```shell
 bash tools/dist_train.sh configs/OccFusion2.py 8
 ```
 
-**b. Test OCCFusion with 8 GPUs.**
+# **Test**
 
 ```shell
 bash tools/dist_test.sh configs/OccFusion2.py ${path to corresponding checkpoint}$ 8
 ```
 
+# Training visualization
 
-### Training visualization
+### tensorboard
 
 tensorboard --logdir ./work_dirs
+
+### swanlab
+
+```
+swanlab: Using SwanLab to track your experiments. Please refer to https://docs.swanlab.cn for more information.
+swanlab: (1) Create a SwanLab account.
+swanlab: (2) Use an existing SwanLab account.
+swanlab: (3) Don't visualize my results.
+swanlab: Enter your choice:
+```

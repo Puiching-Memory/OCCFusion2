@@ -1,5 +1,5 @@
 _base_ = ['_base_/default_runtime.py']
-custom_imports = dict(imports=['occfusion'], allow_failed_imports=False)
+custom_imports = dict(imports=['occfusion',"swanlab.integration.mmengine"], allow_failed_imports=False)
 
 load_from = 'ckpt/r101_dcn_fcos3d_pretrain.pth'
 
@@ -227,9 +227,18 @@ val_evaluator = dict(type='EvalMetric')
 
 test_evaluator = val_evaluator
 
-vis_backends = [dict(type='TensorboardVisBackend')]
+vis_backends = [
+    dict(
+        type="SwanlabVisBackend",
+        init_kwargs={ # swanlab.init 参数
+            "project": "OCCFusion2",
+            "experiment_name": "OCCFusion2-baseline",  # 实验名称
+            # "description": "Note whatever you want",  # 实验的描述信息
+        },
+    ),
+]
 visualizer = dict(
-    type='Det3DLocalVisualizer', vis_backends=vis_backends, name='visualizer')
+    type='Visualizer', vis_backends=vis_backends, name='visualizer')
 
 optim_wrapper = dict(
     type='OptimWrapper',

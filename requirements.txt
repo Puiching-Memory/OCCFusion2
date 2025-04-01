@@ -1,3 +1,4 @@
 focal_loss_torch==0.1.2
 pykitti==0.3.1
 timm==1.0.15
+swanlab==0.5.4
