@@ -9,7 +9,7 @@ import os
 from focal_loss.focal_loss import FocalLoss
 from mmdet3d.models.losses import LovaszLoss
 from .loss import geo_scal_loss, sem_scal_loss
-
+import time
 
 @MODELS.register_module()
 class OccFusion(Base3DSegmentor):

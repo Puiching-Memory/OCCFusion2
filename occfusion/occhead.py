@@ -26,13 +26,14 @@ class OccHead(BaseModule):
     
     @autocast('cuda',torch.float32)
     def forward(self, xyz_volumes): 
-        #print("xyz_volumes",xyz_volumes.shape)       
+        print("xyz_volumes",len(xyz_volumes),xyz_volumes[0].shape,xyz_volumes[1].shape,xyz_volumes[2].shape)       
         if self.training:
             logits = []
             for mlp_occ,xyz_volume in zip(self.mlp_occs, xyz_volumes):
                 logit = mlp_occ(xyz_volume.permute(0,2,3,4,1))
                 logits.append(logit)
             # logits = self.mlp_occs[0](xyz_volumes.permute(0,2,3,4,1))
+            print(len(logits),logits[0].shape,logits[1].shape,logits[2].shape)
             return logits
         else:
             logits_lvl0 = self.mlp_occs[0](xyz_volumes[0].permute(0,2,3,4,1))

@@ -38,7 +38,7 @@ model = dict(
             max_num_points=-1,
             max_voxels=-1,
         )),
-    backbone_cfg=dict(
+    image_backbone_cfg=dict(
         type='occfusion.custom_ResNet',
         depth=50,
         num_stages=4,
@@ -47,16 +47,18 @@ model = dict(
         norm_cfg=dict(type='BN2d', requires_grad=False),
         norm_eval=True,
         style='pytorch',
-        dcn=dict(type='DCNv2', deform_groups=1, fallback_on_stride=False),  
-        stage_with_dcn=(False, False, True, True)),
+        #dcn=dict(type='DCNv2', deform_groups=1, fallback_on_stride=False),  
+        #stage_with_dcn=(False, False, True, True),
+        pretrained='torchvision://resnet50'
+        ),
     neck_cfg=dict(
-        type='mmdet.FPN',
-        in_channels=[512, 1024, 2048],
+        type='mmdet.DilatedEncoder',
+        in_channels=2048,
         out_channels=512,
-        start_level=0,
-        add_extra_convs='on_output',
-        num_outs=3,
-        relu_before_extra_convs=True),
+        block_mid_channels=128,
+        num_residual_blocks=4,
+        block_dilations=[1, 2, 4, 6],
+    ),
     view_transformer_cfg=dict(
         type='MultiScaleInverseMatrixVT',
         feature_strides=[8, 16, 32],
@@ -73,9 +75,11 @@ model = dict(
         use_lidar=True,
         use_radar=False
         ),
+    
     occ_head_cfg=dict(
-        type='OccHead',
-        channels=[32,64,128,256],
+        type='OccHead2',
+        #channels=[32,64,128,256],
+        channels=32,
         num_classes=nbr_class
         )
 )
@@ -214,7 +218,7 @@ vis_backends = [
         type="SwanlabVisBackend",
         init_kwargs={ # swanlab.init 参数
             "project": "OCCFusion2",
-            "experiment_name": "OCCFusion2-baseline",  # 实验名称
+            "experiment_name": "OCCFusion2-C",  # 实验名称
             # "description": "Note whatever you want",  # 实验的描述信息
         },
     ),
