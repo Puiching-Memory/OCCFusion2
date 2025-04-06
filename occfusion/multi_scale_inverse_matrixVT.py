@@ -343,8 +343,10 @@ class SingleScaleInverseMatrixVT(BaseModule):
         res = tuple(torch.stack(vt) for vt in batch_vt)
         return res
     
+    @torch.compiler.disable(recursive=True)
     @autocast('cuda',torch.float32)
     def _get_vt_matrix_single(self, img_feat, img_meta):
+        # FIXME: https://github.com/users/Puiching-Memory/projects/3/views/3?pane=issue&itemId=104361185
         Nc, C, H, W = img_feat.shape
         # lidar2img: (Nc, 4, 4)
         lidar2img = img_meta['lidar2img']

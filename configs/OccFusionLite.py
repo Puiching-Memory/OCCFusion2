@@ -1,7 +1,7 @@
 _base_ = ['_base_/default_runtime.py']
 custom_imports = dict(imports=['occfusion',"swanlab.integration.mmengine"], allow_failed_imports=False)
 
-load_from = 'ckpt/r101_dcn_fcos3d_pretrain.pth'
+# load_from = 'ckpt/r101_dcn_fcos3d_pretrain.pth'
 
 dataset_type = 'NuScenesSegDataset'
 data_root = 'data/nuscenes'
@@ -22,16 +22,10 @@ point_cloud_range = [-50.0, -50.0, -5.0, 50.0, 50.0, 3.0]
 grid_size_vt = [100, 100, 8]
 num_points_per_voxel = 35
 nbr_class = 17
-use_lidar=True
-use_radar=True
-use_occ3d=False
-find_unused_parameters=False
+find_unused_parameters=True
 
 model = dict(
-    type='OccFusion',
-    use_occ3d=use_occ3d,
-    use_lidar=use_lidar,
-    use_radar=use_radar,
+    type='OccFusion2',
     data_preprocessor=dict(
         type='OccFusionDataPreprocessor',
         pad_size_divisor=32,
@@ -44,18 +38,18 @@ model = dict(
             max_num_points=-1,
             max_voxels=-1,
         )),
-    backbone=dict(
+    backbone_cfg=dict(
         type='occfusion.custom_ResNet',
-        depth=101,
+        depth=50,
         num_stages=4,
         out_indices=(1, 2, 3),
         frozen_stages=1,
         norm_cfg=dict(type='BN2d', requires_grad=False),
         norm_eval=True,
-        style='caffe',
+        style='pytorch',
         dcn=dict(type='DCNv2', deform_groups=1, fallback_on_stride=False),  
         stage_with_dcn=(False, False, True, True)),
-    neck=dict(
+    neck_cfg=dict(
         type='mmdet.FPN',
         in_channels=[512, 1024, 2048],
         out_channels=512,
@@ -63,7 +57,7 @@ model = dict(
         add_extra_convs='on_output',
         num_outs=3,
         relu_before_extra_convs=True),
-    view_transformer=dict(
+    view_transformer_cfg=dict(
         type='MultiScaleInverseMatrixVT',
         feature_strides=[8, 16, 32],
         in_channel=[32,64,128,256],
@@ -76,22 +70,10 @@ model = dict(
         sampling_rate=[4,5,6],
         num_cams=[None,None,None],
         enable_fix=False,
-        use_lidar=use_lidar,
-        use_radar=use_radar
+        use_lidar=True,
+        use_radar=False
         ),
-    svfe_lidar=dict(
-        type='SVFE',
-        num_pts=num_points_per_voxel,
-        input_dim=8,
-        grid_size=grid_size_vt
-        ),
-    svfe_radar=dict(
-        type='SVFE',
-        num_pts=num_points_per_voxel,
-        input_dim=11,
-        grid_size=grid_size_vt
-        ),
-    occ_head=dict(
+    occ_head_cfg=dict(
         type='OccHead',
         channels=[32,64,128,256],
         num_classes=nbr_class
@@ -107,7 +89,7 @@ train_pipeline = [
         backend_args=backend_args),
     dict(
         type='LoadRadarPointsMultiSweeps',
-        use_occ3d=use_occ3d,
+        use_occ3d=False,
         load_dim=18,
         sweeps_num=6,
         use_dim=[0, 1, 2, 8, 9, 18],
@@ -154,7 +136,7 @@ val_pipeline = [
         backend_args=backend_args),
     dict(
         type='LoadRadarPointsMultiSweeps',
-        use_occ3d=use_occ3d,
+        use_occ3d=False,
         load_dim=18,
         sweeps_num=6,
         use_dim=[0, 1, 2, 8, 9, 18],

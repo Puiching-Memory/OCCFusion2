@@ -25,7 +25,8 @@ class OccHead(BaseModule):
             self.mlp_occs.append(mlp_occ)
     
     @autocast('cuda',torch.float32)
-    def forward(self, xyz_volumes):        
+    def forward(self, xyz_volumes): 
+        #print("xyz_volumes",xyz_volumes.shape)       
         if self.training:
             logits = []
             for mlp_occ,xyz_volume in zip(self.mlp_occs, xyz_volumes):

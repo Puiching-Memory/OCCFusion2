@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 export OMP_NUM_THREADS=1
 export MKL_NUM_THREADS=1
-export CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7
+export CUDA_VISIBLE_DEVICES=2
+# export TORCH_LOGS="+dynamo"
+# export TORCHDYNAMO_VERBOSE=1
 
 CONFIG=$1
 GPUS=$2
@@ -11,7 +13,8 @@ PORT=${PORT:-29500}
 MASTER_ADDR=${MASTER_ADDR:-"127.0.0.1"}
 
 PYTHONPATH="$(dirname $0)/..":$PYTHONPATH \
-python -m torch.distributed.launch \
+python -X importtime \
+    -m torch.distributed.launch \
     --nnodes=$NNODES \
     --node_rank=$NODE_RANK \
     --master_addr=$MASTER_ADDR \
